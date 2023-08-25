@@ -31,14 +31,19 @@ const protect = async (req, res, next) => {
 };
 
 //Admin Authorization Access
-const admin = (req, res, next) => {
-  const user = User.findOne(req.user.id);
-  if (req.user && user.isAdmin) {
-    next();
-  } else {
-    res.status(401).json({
+const admin = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (user.isAdmin) {
+      next();
+    } else {
+      res.status(401);
+      throw new Error("Not authorized as admin");
+    }
+  } catch (error) {
+    res.json({
       status: "error",
-      msg: "Not authorized as an admin",
+      msg: error.message,
     });
   }
 };
