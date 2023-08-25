@@ -1,0 +1,22 @@
+import express, { urlencoded } from "express";
+import dotenv from "dotenv";
+import logger from "morgan";
+import connectDB from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+// import eventRoutes from "./routes/eventRoutes.js"
+dotenv.config();
+const app = express();
+const port = process.env.PORT || 4000;
+connectDB();
+
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
+// app.use("/events",eventRoutes)
+app.listen(port, () => {
+  console.log(`Server running at port ${port}`.underline.italic);
+});
