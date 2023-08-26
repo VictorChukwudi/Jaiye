@@ -36,6 +36,15 @@ const validator = {
       .normalizeEmail(),
     check("password", "Password is required").exists().bail().not().isEmpty(),
   ],
+  // create_event: [
+  //   check(
+  //     "event_info",
+  //     "enter basic info for event(i.e. title, organizer, type, category, tags and desc"
+  //   )
+  //     .exists()
+  //     .isObject(),
+  //   check("event_location", "enter event location details ()"),
+  // ],
 };
 
 export default validator;
