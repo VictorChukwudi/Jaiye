@@ -17,7 +17,10 @@ const signup = async (req, res) => {
     const { fullname, email, password, confirmpassword } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json(errors.array());
+      res.status(400).json({
+        status: "error",
+        msg: errors.array(),
+      });
     } else {
       const userExists = await User.findOne({ email });
       if (userExists) {

@@ -1,47 +1,47 @@
 import Event from "../models/events/eventModel.js";
-
+import { validationResult } from "express-validator";
 const createEvent = async (req, res) => {
   try {
+    const {
+      title,
+      organizer,
+      type,
+      category,
+      desc,
+      tags,
+      venue,
+      isOnline,
+      url_link,
+      hasLaterDate,
+      isRecurring,
+      start_date,
+      end_date,
+    } = req.body;
     const id = req.user.id;
-    const { event_info, event_location, event_schedule } = req.body;
-    const { title, organizer, type, category, desc, tags } = event_info;
-    const { venue, online, later_date } = event_location;
-    const { isRecurring, start_date, end_date } = event_schedule;
-    if (!event_info || !event_location || !event_schedule) {
-      res.status(400);
-      throw new Error(
-        " event_info, event_location and event_schedule objects are required"
-      );
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json(errors.array());
     } else {
-      const newEvent = new Event({
+      const event = await new Event({
         created_by: id,
-        event_info: {
-          title,
-          organizer,
-          type,
-          category,
-          desc,
-          tags,
-        },
-        event_location: {
-          venue: venue || "nil",
-          online: {
-            status: online.status || false,
-            link: online.link,
-          },
-          later_date,
-        },
-        event_schedule: {
-          isRecurring: isRecurring || false,
-          start_date: start_date || Date.now(),
-          end_date: end_date || Date.now() + 86400000,
-        },
-      });
-      newEvent.save();
-      res.status(200).json({
+        title,
+        organizer,
+        type,
+        category,
+        desc,
+        tags,
+        venue,
+        isOnline,
+        url_link,
+        hasLaterDate,
+        isRecurring,
+        start_date,
+        end_date,
+      }).save();
+      res.status(201).json({
         status: "success",
-        msg: "new event created",
-        data: newEvent,
+        msg: "event created",
+        data: event,
       });
     }
   } catch (error) {

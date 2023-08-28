@@ -36,15 +36,40 @@ const validator = {
       .normalizeEmail(),
     check("password", "Password is required").exists().bail().not().isEmpty(),
   ],
-  // create_event: [
-  //   check(
-  //     "event_info",
-  //     "enter basic info for event(i.e. title, organizer, type, category, tags and desc"
-  //   )
-  //     .exists()
-  //     .isObject(),
-  //   check("event_location", "enter event location details ()"),
-  // ],
+  event: [
+    check("title", "Event title is required")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("organizer", "Event organizer is required")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("type", "Event type is required")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("category", "Event category is required")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("desc", "Event description is required")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check(
+      "tags",
+      "Event tags required. A minimum of 2 tags and maximum of 5 tags."
+    )
+      .exists()
+      .bail()
+      .isArray({ min: 2, max: 5 }),
+  ],
 };
 
 export default validator;

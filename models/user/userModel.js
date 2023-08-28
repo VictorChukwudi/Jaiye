@@ -43,3 +43,31 @@ const userSchema = schema(
 const User = mongoose.model("User", userSchema);
 
 export default User;
+
+//DOCUMETATION
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     signup:
+ *       type: object
+ *       required:
+ *         - fullname
+ *         - email
+ *         - password
+ *         - confirmpassword
+ *       properties:
+ *         fullname:
+ *                 type: string
+ *         email:
+ *                 type: string
+ *         password:
+ *                 type: string
+ *         confirmpassword:
+ *                 type: string
+ *       example:
+ *         fullname: John Doe
+ *         email: johndoe@example.com
+ *         password: strongpassword123
+ *         confirmpassword: strongpassword123
+ * */
