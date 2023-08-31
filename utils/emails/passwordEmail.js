@@ -14,7 +14,7 @@ export const passwordEmail = async ({ email, secret }, req, res) => {
   const mailOptions = {
     from: process.env.STARTUP_EMAIL,
     to: email,
-    subject: "Request To Reset Password",
+    subject: "Tickeneft - Request To Reset Password",
     html: `<p>Click <a href="${link}">here</a> to reset password. Link expires in 15 minutes.</p>`,
   };
 

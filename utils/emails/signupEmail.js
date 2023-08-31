@@ -21,7 +21,7 @@ export const signupEmail = async ({ name, email, secret }, req, res) => {
   const mailOptions = {
     from: process.env.STARTUP_EMAIL,
     to: email,
-    subject: "Jaiye Account Verification",
+    subject: "Tickeneft Account Verification",
     html: `<p>Click <a href="${link}">here</a> to verify your email. Verification link expires in 15 minutes.</p>`,
   };
 
