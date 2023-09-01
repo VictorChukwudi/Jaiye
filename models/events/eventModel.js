@@ -21,6 +21,8 @@ const eventSchema = new schema(
     isRecurring: { type: Boolean, default: false },
     start_date: { type: Date, default: Date.now() },
     end_date: { type: Date, default: Date.now() + 86400000 },
+    ticket: { type: String, enum: ["free", "paid"], default: "free" },
+    img_details: { type: Array },
     isPublished: { type: Boolean, default: false },
   },
   {
