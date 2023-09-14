@@ -14,7 +14,8 @@ import { passwordEmail } from "../utils/emails/passwordEmail.js";
 //Signup Controller
 const signup = async (req, res) => {
   try {
-    const { fullname, email, password, confirmpassword } = req.body;
+    const { firstname, lastname, phone_no, email, password, confirmpassword } =
+      req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({
@@ -29,7 +30,9 @@ const signup = async (req, res) => {
       }
 
       const user = new User({
-        fullname, //fullname is required ,e.g Firstname Lastname
+        firstname,
+        lastname,
+        phone_no,
         email,
         password,
       });
@@ -43,7 +46,7 @@ const signup = async (req, res) => {
           } else {
             user.password = hash;
             user.save().then((result) => {
-              const fullname = user.fullname.split("")[1];
+              const firstname = user.firstname;
               const email = user.email;
               // generating secret for email verification
               const secret = generateSecret();
@@ -58,7 +61,7 @@ const signup = async (req, res) => {
                 createdAt: Date.now(),
                 expiresAt: Date.now() + 900000,
               }).save();
-              signupEmail({ fullname, email, secret }, req, res);
+              signupEmail({ firstname, email, secret }, req, res);
             });
           }
         });
@@ -149,7 +152,7 @@ const resendSignupMail = async (req, res) => {
             msg: "Email already verified",
           });
         } else {
-          const fullname = user.fullname.split("")[1];
+          const firstname = user.firstname;
           // generating secret for email verification
           const secret = generateSecret();
           //hashing secret and storing it synchronously for email verification
@@ -162,7 +165,7 @@ const resendSignupMail = async (req, res) => {
             createdAt: Date.now(),
             expiresAt: Date.now() + 180000,
           }).save();
-          signupEmail({ fullname, email, secret }, req, res);
+          signupEmail({ firstname, email, secret }, req, res);
         }
       }
     }
@@ -188,7 +191,9 @@ const login = async (req, res) => {
         if (await bcrypt.compare(password, user.password)) {
           res.json({
             _id: user._id,
-            name: user.name,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            phone_no: user.phone_no,
             email: user.email,
             isAdmin: user.isAdmin,
             emailVerified: user.emailVerified,
@@ -303,7 +308,9 @@ const getUserProfile = async (req, res) => {
     if (user) {
       res.status(200).json({
         _id: user._id,
-        name: user.fullname,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        phone: user.phone_no,
         email: user.email,
         isAdmin: user.isAdmin,
         emailVerified: user.emailVerified,
@@ -323,12 +330,14 @@ const getUserProfile = async (req, res) => {
 //Update Profile Controller
 const updateUserProfile = async (req, res) => {
   try {
-    const { fullname, email } = req.body;
+    const { firstname, lastname, phone_no, email } = req.body;
     const user = await User.findById(req.user.id);
 
     if (user) {
       const updatedUser = {
-        fullname: fullname || user.fullname,
+        firstname: firstname || user.firstname,
+        lastname: lastname || user.lastname,
+        phone: phone_no || user.phone_no,
         email: email || user.email,
       };
 

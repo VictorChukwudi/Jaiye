@@ -2,11 +2,22 @@ import { check } from "express-validator";
 
 const validator = {
   signup: [
-    check("fullname", "Fullname field is required")
+    check("firstname", "Firstname field is required and is a string")
+      .exists()
+      .isString()
+      .bail()
+      .notEmpty()
+      .trim(),
+    check("lastname", "Lastname field is required and is a string")
+      .exists()
+      .isString()
+      .bail()
+      .notEmpty()
+      .trim(),
+    check("phone_no", "Phone_no field is required")
       .exists()
       .bail()
       .notEmpty()
-      .isLength({ min: 6 })
       .trim(),
     check("email", "Email is required (e.g johndoe@email.com) ")
       .exists()

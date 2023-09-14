@@ -8,7 +8,7 @@ import eventRoutes from "./routes/eventRoutes.js";
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 
 //database connection
 connectDB();
