@@ -4,14 +4,14 @@ const validator = {
   signup: [
     check("firstname", "Firstname field is required and is a string")
       .exists()
-      .isString()
       .bail()
+      .isString()
       .notEmpty()
       .trim(),
     check("lastname", "Lastname field is required and is a string")
       .exists()
-      .isString()
       .bail()
+      .isString()
       .notEmpty()
       .trim(),
     check("phone_no", "Phone_no field is required")
