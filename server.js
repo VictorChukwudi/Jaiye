@@ -1,6 +1,7 @@
 import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import logger from "morgan";
+import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -15,6 +16,13 @@ connectDB();
 
 //morgan route logger
 app.use(logger("dev"));
+
+//cors setup
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
