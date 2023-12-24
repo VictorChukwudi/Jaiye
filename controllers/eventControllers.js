@@ -93,7 +93,7 @@ const getSingleEvent= async(req,res)=>{
     const id=req.params.id;
     const event= await Event.findById(id);
     if(!event){
-      res.status(400)
+      res.status(404)
       throw new Error(`Event with id: ${id} not found`);
     }else{
       res.status(200).json({
@@ -109,13 +109,6 @@ const getSingleEvent= async(req,res)=>{
     })
   }
 }
-const editEvent = async()=>{
-  try {
-    
-  } catch (error) {
-    
-  }
-}
 
 const deleteEvent = async(req,res)=>{
   try {
@@ -123,7 +116,7 @@ const deleteEvent = async(req,res)=>{
     const userID=req.user.id;
     const event= await Event.findById(id);
     if(!event){
-      res.status(400)
+      res.status(404)
       throw new Error(`Event with id: ${id} not found`);
     }else if(event.created_by!=userID || !adminControl(userID)){
       res.status(401)
@@ -147,4 +140,46 @@ const deleteEvent = async(req,res)=>{
     })
   }
 }
-export { createEvent, getEvents, getSingleEvent, editEvent, deleteEvent };
+
+// const editEvent = async(req,res)=>{
+//   try {
+//     const id=req.params.id
+//     const userID=req.user.id
+
+//     const {
+//       title,
+//       organizer,
+//       type,
+//       category,
+//       desc,
+//       tags,
+//       venue,
+//       isOnline,
+//       url_link,
+//       hasLaterDate,
+//       isRecurring,
+//       start_date,
+//       end_date,
+//     } = req.body;
+    
+//     const images = req.files;
+//     if (images.length <= 0) {
+      
+//     }
+    
+//     const event=await Event.findById(id)
+//     if(!event){
+//       res.status(404)
+//       throw new Error(`Event with id: ${id} not found`);
+//     }else if(event.created_by!=userID || !adminControl(userID)){
+//       res.status(401)
+//       throw new Error("Unauthorized event edit attempt.")
+//     }else{
+
+//     }
+//   } catch (error) {
+    
+//   }
+// }
+
+export { createEvent, getEvents, getSingleEvent, deleteEvent };
