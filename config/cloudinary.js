@@ -13,7 +13,8 @@ const cloudUpload = (filePath) => {
     if (err) {
       console.error(err);
     } else {
-      return { url: result.url };
+      console.log(result)
+      return result;
     }
   });
 };
@@ -23,10 +24,21 @@ const fileUpload = async (files) => {
   let images = [];
   for (let i = 0; i < imageFiles.length; i++) {
     let path = imageFiles[i].path;
-    let result = await cloudUpload(path);
-    images.push(result.url);
+    let result= await cloudUpload(path);
+    
+    images.push({img_id:result.public_id, img_url:result.url});
   }
   return images;
 };
 
-export { cloudinary, cloudUpload, fileUpload };
+const fileDelete= async (id)=>{
+  try{
+    //delete using img_id
+  const result = await cloudinary.uploader.destroy(id)
+  console.log(result)
+  }catch(error){
+    console.log(error)
+  }
+}
+
+export { cloudinary, cloudUpload, fileUpload ,fileDelete};

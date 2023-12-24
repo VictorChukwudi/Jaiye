@@ -14,13 +14,13 @@ const eventSchema = new schema(
     category: { type: String, required: true },
     desc: { type: String, required: true },
     tags: { type: Array, required: true },
-    venue: { type: String, default: "nil" },
-    isOnline: { type: Boolean, default: false },
-    url_link: { type: String, default: "nil" },
-    hasLaterDate: { type: Boolean, default: false },
-    isRecurring: { type: Boolean, default: false },
-    start_date: { type: Date, default: Date.now() },
-    end_date: { type: Date, default: Date.now() + 86400000 },
+    venue: { type: String, default: "nil" }, //venue is optional
+    isOnline: { type: Boolean, default: false }, //optional
+    url_link: { type: String, default: "nil" }, //optional
+    hasLaterDate: { type: Boolean, default: false }, //optional
+    isRecurring: { type: Boolean, default: false }, //optional
+    start_date: { type: Date, default: Date.now() }, //optional
+    end_date: { type: Date, default: Date.now() + 86400000 }, //optional
     ticket: { type: String, enum: ["free", "paid"], default: "free" },
     img_details: { type: Array },
     isPublished: { type: Boolean, default: false },

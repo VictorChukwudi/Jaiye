@@ -1,7 +1,9 @@
+//https://tickeneft.onrender.com
 import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import logger from "morgan";
 import cors from "cors";
+import helmet from "helmet"
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -23,7 +25,7 @@ app.use(
     origin: "*",
   })
 );
-
+app.use(helmet())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

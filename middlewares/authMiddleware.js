@@ -30,22 +30,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-//Admin Authorization Access
-const admin = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (user.isAdmin) {
-      next();
-    } else {
-      res.status(401);
-      throw new Error("Not authorized as admin");
-    }
-  } catch (error) {
-    res.json({
-      status: "error",
-      msg: error.message,
-    });
-  }
-};
 
-export { protect, admin };
+
+export { protect};
