@@ -91,7 +91,8 @@ const verifySignupMail = async (req, res) => {
           msg: "email has already been verified",
         });
       } else {
-        const details = await Verification.findOne({ userID: userID });
+        const details = await Verification.findOne({ userID: userID }).sort({"createdAt":-1});
+        console.log(details);
         //check if a verification detail was found
         if(!details){
           res.status(400)
