@@ -14,7 +14,8 @@ export const signupEmail = async ({ name, email, secret }, req, res) => {
     isAdmin: user.isAdmin,
     token: generateToken(user._id),
   };
-  const link = `${protocol}://${req.get("host")}/api/users/${
+  const route="api/user";
+  const link = `${protocol}://${req.get("host")}/${route}/${
     user._id
   }/${secret}`;
 

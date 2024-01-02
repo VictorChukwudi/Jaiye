@@ -1,7 +1,7 @@
 import Event from "../models/events/eventModel.js";
 import { validationResult } from "express-validator";
 import { fileDelete, fileUpload } from "../config/cloudinary.js";
-import { adminControl } from "../utils/admin/adminAccess.js";
+import { adminControl } from "../utils/access/adminAccess.js";
 const createEvent = async (req, res) => {
   try {
     const {

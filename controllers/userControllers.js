@@ -92,36 +92,41 @@ const verifySignupMail = async (req, res) => {
         });
       } else {
         const details = await Verification.findOne({ userID: userID });
-        console.log(details.expiresAt);
-        //checking if verification token has expired
+        //check if a verification detail was found
+        if(!details){
+          res.status(400)
+          throw new Error("Request for email to verify email address");
+        }else{
+          //checking if verification token has expired
         if (details.expiresAt < Date.now()) {
-          Verification.deleteMany({ userID });
-          res.status(400);
-          throw new Error("Verification link has expired");
-        } else {
-          const checkSecret = await bcrypt.compare(
-            secret.toString(),
-            details.secret
-          );
-          if (!checkSecret) {
-            Verification.deleteMany({ userID });
-            res.status(400);
-            throw new Error("Invalid verification link");
-          } else {
-            const updateUser = await User.findByIdAndUpdate(
-              userID,
-              {
-                emailVerified: true,
-              },
-              { new: true }
-            ).select(["-password", "-__v"]);
-            await Verification.findOneAndDelete({ userID });
-            res.status(200).json({
-              status: "success",
-              msg: "email successfully verified",
-              data: updateUser,
-            });
-          }
+          await Verification.deleteMany({ userID });
+           res.status(400);
+           throw new Error("Verification link has expired");
+         } else {
+           const checkSecret = await bcrypt.compare(
+             secret.toString(),
+             details.secret
+           );
+           if (!checkSecret) {
+            await Verification.deleteMany({ userID });
+             res.status(400);
+             throw new Error("Invalid verification link");
+           } else {
+             const updateUser = await User.findByIdAndUpdate(
+               userID,
+               {
+                 emailVerified: true,
+               },
+               { new: true }
+             ).select(["-password", "-__v"]);
+             await Verification.findOneAndDelete({ userID });
+             res.status(200).json({
+               status: "success",
+               msg: "email successfully verified",
+               data: updateUser,
+             });
+           }
+         }
         }
       }
     }
