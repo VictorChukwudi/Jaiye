@@ -1,5 +1,7 @@
 import Ticket from "../models/events/ticketModel.js";
-import { CREATED, NOTFOUND, OK } from "../utils/statusCodes.js";
+import Event from "../models/events/eventModel.js";
+import mongoose from "mongoose"
+import { CREATED, NOTFOUND, OK, BADREQUEST } from "../utils/statusCodes.js";
 
 const addTicketDetails=async(req,res)=>{
     try {
@@ -13,23 +15,30 @@ const addTicketDetails=async(req,res)=>{
           throw new Error(`Event with ID:
           ${eventID} not found and cannot create ticket details.`);
         }else{
-          const eventTicketDetails= new Ticket({
-            eventID,    //ObjectID
-            eventStatus,    //String - free or paid
-            eventName,  //String - could be same as event title
-            ticketQuantity, //Number
-            ticketTypeAndPrice, // Array of Objects with attributies of type and price
-            ticketQuantity,
-            minDailySales,
-            maxDailySales,
-            salesChannel    //Array of Strings
-          }).save()
-  
-          res.status(CREATED).json({
-            status:"success",
-            msg:`Ticket details for event with ID: ${eventID} has been created.`,
-            data:eventTicketDetails
-          })
+      
+          const ticket = await Ticket.findOne({eventID})
+        console.log(ticket)
+          if(ticket){
+            res.status(BADREQUEST)
+            throw new Error(`Ticket details for event with ID: ${eventID} has already been created and can only be edited or deleted.`)
+          }else{
+            const eventTicketDetails= new Ticket({
+              eventID,    //ObjectID
+              eventStatus,    //String - free or paid
+              eventName,  //String - could be same as event title
+              ticketQuantity, //Number
+              ticketTypeAndPrice, // Array of Objects with attributies of type and price
+              minDailySales,
+              maxDailySales,
+              salesChannel    //Array of Strings
+            }).save()
+    
+            res.status(CREATED).json({
+              status:"success",
+              msg:`Ticket details for event with ID: ${eventID} has been created.`,
+              data: await Ticket.findOne({eventID})
+            })
+          }
         }
     } catch (error) {
       res.json({
@@ -77,7 +86,7 @@ const addTicketDetails=async(req,res)=>{
   const deleteTicketDetails = async(req,res)=>{
     try {
       const id= req.params.eventID
-        
+
     } catch (error) {
       
     }
