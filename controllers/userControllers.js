@@ -203,7 +203,7 @@ const login = async (req, res) => {
             email: user.email,
             isAdmin: user.isAdmin,
             emailVerified: user.emailVerified,
-            token: generateToken(user._id),
+            token: generateToken(user._id, user.isAdmin),
           });
         } else {
           res.status(401);

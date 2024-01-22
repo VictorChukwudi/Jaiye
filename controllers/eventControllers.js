@@ -2,6 +2,8 @@ import Event from "../models/events/eventModel.js";
 import { validationResult } from "express-validator";
 import { fileDelete, fileUpload } from "../config/cloudinary.js";
 import { adminControl } from "../utils/access/adminAccess.js";
+import { BADREQUEST, CREATED, NOTFOUND, OK, UNAUTHORIZED } from "../utils/statusCodes.js";
+
 const createEvent = async (req, res) => {
   try {
     const {
@@ -23,10 +25,10 @@ const createEvent = async (req, res) => {
     const images = req.files;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json(errors.array());
+      res.status(BADREQUEST).json(errors.array());
     } else {
       if (images.length <= 0) {
-        res.status(400);
+        res.status(BADREQUEST);
         throw new Error(
           "An event image is required. Any other 3 images can be added."
         );
@@ -49,7 +51,7 @@ const createEvent = async (req, res) => {
           end_date,
           img_details: uploader,
         }).save();
-        res.status(201).json({
+        res.status(CREATED).json({
           status: "success",
           msg: "event created",
           data: event,
@@ -69,12 +71,12 @@ const getEvents=async(req,res)=>{
     const events= await Event.find()
   
     if(events.length<1){
-      res.status(200).json({
+      res.status(OK).json({
         status:"success",
         msg:`${events.length} events found`
       })
     }else{
-      res.status(200).json({
+      res.status(OK).json({
         status:"success",
         msg:`${events.length} events found`,
         data:events,
@@ -93,10 +95,10 @@ const getSingleEvent= async(req,res)=>{
     const id=req.params.id;
     const event= await Event.findById(id);
     if(!event){
-      res.status(404)
+      res.status(NOTFOUND)
       throw new Error(`Event with id: ${id} not found`);
     }else{
-      res.status(200).json({
+      res.status(OK).json({
         status:"success",
         msg:`Event with id: ${id} found`,
         data:event
@@ -116,10 +118,10 @@ const deleteEvent = async(req,res)=>{
     const userID=req.user.id;
     const event= await Event.findById(id);
     if(!event){
-      res.status(404)
+      res.status(NOTFOUND)
       throw new Error(`Event with id: ${id} not found`);
     }else if(event.created_by!=userID || !adminControl(userID)){
-      res.status(401)
+      res.status(UNAUTHORIZED)
       throw new Error("Unauthorized event delete attempt.")
     }else{
       let images=event.img_details
@@ -128,7 +130,7 @@ const deleteEvent = async(req,res)=>{
       });
       
       await Event.findByIdAndDelete(id)
-      res.status(200).json({
+      res.status(OK).json({
         status:"success",
         msg:`Event with id: ${id} deleted successfully`
       })
@@ -182,4 +184,27 @@ const deleteEvent = async(req,res)=>{
 //   }
 // }
 
-export { createEvent, getEvents, getSingleEvent, deleteEvent };
+const filterEventBySearchParam=async(req,res)=>{
+  try {
+    const search=req.query.search
+    if(!search){
+      res.status(BADREQUEST)
+      throw new Error("Search is empty.")
+    }else{
+      const events=await Event.find({$text:{ $search:search}})
+      res.status(OK).json({
+        status:"success",
+        msg:`${events.length} found.`,
+        data:events
+      })
+    }
+  } catch (error) {
+    res.json({
+      status:"error",
+      msg:error.message
+    })
+  }
+}
+
+export { createEvent, getEvents, getSingleEvent, deleteEvent
+,filterEventBySearchParam};

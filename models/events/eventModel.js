@@ -30,5 +30,7 @@ const eventSchema = new schema(
   }
 );
 
+eventSchema.index({title:"text", category:"text", tags:"text", venue:"text"});
+
 const Event = mongoose.model("Event", eventSchema);
 export default Event;
