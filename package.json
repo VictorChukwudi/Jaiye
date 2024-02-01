@@ -34,9 +34,6 @@
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.4",
     "passport": "^0.6.0",
-    "passport-google-oauth2": "^0.2.0",
-    "swagger-autogen": "^2.23.5",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "passport-google-oauth2": "^0.2.0"
   }
 }
