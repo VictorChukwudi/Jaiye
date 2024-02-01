@@ -144,6 +144,7 @@ const deleteEvent = async(req,res)=>{
       })
     }
   } catch (error) {
+    console.log(error)
     res.json({
       status:"error",
       msg:error.message
