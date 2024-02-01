@@ -23,7 +23,7 @@ const ticketSchema = new schema(
       type:Number,
       required:true
     },
-    ticketTypeAndPrice:[Object],
+    ticketsInfo:[Object],
     minDailySales:Number,
     maxDailySales:Number,
     salesChannel:[String]

@@ -1,3 +1,5 @@
+import fetch from 'node-fetch';
+import { protocol } from "../server.js";
 import Event from "../models/events/eventModel.js";
 import { validationResult } from "express-validator";
 import { fileDelete, fileUpload } from "../config/cloudinary.js";
@@ -116,6 +118,9 @@ const deleteEvent = async(req,res)=>{
   try {
     const id=req.params.id;
     const userID=req.user.id;
+    // const link = `${protocol}://${req.get("host")}/${route}`
+    const route=`/api/tickets/${id}`
+    const url= `${protocol}://${req.get("host")}/${route}`
     const event= await Event.findById(id);
     if(!event){
       res.status(NOTFOUND)
@@ -130,6 +135,9 @@ const deleteEvent = async(req,res)=>{
       });
       
       await Event.findByIdAndDelete(id)
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data);
       res.status(OK).json({
         status:"success",
         msg:`Event with id: ${id} deleted successfully`

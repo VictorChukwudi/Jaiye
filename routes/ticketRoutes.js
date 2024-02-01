@@ -1,10 +1,11 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import { addTicketDetails, editTicketDetails } from "../controllers/ticketContollers.js";
+import { addTicketDetails, editTicketDetails, deleteTicketDetails } from "../controllers/ticketContollers.js";
 const router = express.Router();
 
-router.route("/")
-    .post(protect, addTicketDetails)
-    .patch(protect, editTicketDetails)
+
+router.post("/", protect, addTicketDetails)
+router.patch("/:id", protect, editTicketDetails)
+router.delete("/:id", protect, deleteTicketDetails)
 
 export default router;

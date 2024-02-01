@@ -1,12 +1,13 @@
 import Ticket from "../models/events/ticketModel.js";
 import Event from "../models/events/eventModel.js";
 import mongoose from "mongoose"
-import { CREATED, NOTFOUND, OK, BADREQUEST } from "../utils/statusCodes.js";
+import { CREATED, NOTFOUND, OK, BADREQUEST, NOCONTENT } from "../utils/statusCodes.js";
+import { adminControl } from "../utils/access/adminAccess.js";
 
 const addTicketDetails=async(req,res)=>{
     try {
       const {eventID, eventStatus, eventName,
-        ticketQuantity, ticketTypeAndPrice, 
+        ticketQuantity, ticketsInfo, 
         minDailySales, maxDailySales, salesChannel} = req.body
   
         const event= await Event.findById(eventID);
@@ -27,7 +28,7 @@ const addTicketDetails=async(req,res)=>{
               eventStatus,    //String - free or paid
               eventName,  //String - could be same as event title
               ticketQuantity, //Number
-              ticketTypeAndPrice, // Array of Objects with attributies of type and price
+              ticketsInfo, // Array of Objects with attributes of type, price and quantity left
               minDailySales,
               maxDailySales,
               salesChannel    //Array of Strings
@@ -52,8 +53,9 @@ const addTicketDetails=async(req,res)=>{
     try {
         const eventID = req.params.ID;
         const {eventStatus, eventName,
-            ticketQuantity, ticketTypeAndPrice, 
+            ticketQuantity, ticketsInfo, 
             minDailySales, maxDailySales, salesChannel} = req.body
+            
         const TicketDetails= await Ticket.findById(eventID);
         if(!TicketDetails){
             res.status(NOTFOUND)
@@ -63,13 +65,13 @@ const addTicketDetails=async(req,res)=>{
                 eventStatus: eventStatus || TicketDetails.eventStatus,
                 eventName: eventName || TicketDetails.eventName,
                 ticketQuantity: ticketQuantity || TicketDetails.ticketQuantity,
-                ticketTypeAndPrice: ticketTypeAndPrice || TicketDetails.ticketTypeAndPrice,
+                ticketsInfo: ticketsInfo || TicketDetails.ticketsInfo,
                 minDailySales: minDailySales || TicketDetails.minDailySales,
                 maxDailySales: maxDailySales || TicketDetails.maxDailySales,
                 salesChannel: salesChannel || TicketDetails.salesChannel
             }
             const updateTicketDetails= await Ticket.findByIdAndUpdate(eventID,{$set: updatedDetails}, {$new: true})
-             res.status(OK).json({
+            res.status(OK).json({
                 status:"success",
                 msg:`Ticket details for event with ID: ${eventID} updated successfully.`,
                 data:updateTicketDetails
@@ -85,19 +87,34 @@ const addTicketDetails=async(req,res)=>{
 
   const deleteTicketDetails = async(req,res)=>{
     try {
-      const id= req.params.eventID
+      const eventID= req.params.id
+      const ticketDetails= await Ticket.findOne({eventID})
+
+      if(!ticketDetails){
+        res.status(400)
+        throw new Error(`Ticket details for event with id: ${eventID} not found.`)
+      }else{
+        await Ticket.findOneAndDelete({eventID})
+        res.status(NOCONTENT).json({
+          status:"success",
+          msg:`Event with id: ${eventID} ticket details, deleted successfully.` 
+        })
+      }
 
     } catch (error) {
-      
+      res.json({
+        status:"error",
+        msg: error.message
+      })
     }
   }
   
-  export {addTicketDetails, editTicketDetails}
+  export {addTicketDetails, editTicketDetails, deleteTicketDetails}
   
   
   
   
-  
+  // "ticketsInfo":[{"type":"Regular", "price":"$10", "quantityLeft":50},{"type":"VIP","price":"$20", "quantityLeft":30},{"type":"VVIP","price":"$50","quantityLeft":20}],
   
   
   

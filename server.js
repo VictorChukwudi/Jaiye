@@ -15,7 +15,7 @@ import { adminMiddie } from "./middlewares/adminAccessMiddleware.js";
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
-
+export const protocol = process.env.NODE_ENV == "development" ? "http" : "https";
 //database connection
 connectDB();
 
@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 //Routes
 app.use("/api/user", userRoutes);
 app.use("/api/events", eventRoutes);
-app.use("/api/ticket", ticketRoutes);
+app.use("/api/tickets", ticketRoutes);
 app.use("/api/admin", protect, adminMiddie, adminRoutes);
 
 app.listen(port, () => {
