@@ -119,7 +119,7 @@ const deleteEvent = async(req,res)=>{
     const id=req.params.id;
     const userID=req.user.id;
     // const link = `${protocol}://${req.get("host")}/${route}`
-    const route=`/api/tickets/${id}`
+    const route=`api/tickets/${id}`
     const url= `${protocol}://${req.get("host")}/${route}`
     const event= await Event.findById(id);
     if(!event){
