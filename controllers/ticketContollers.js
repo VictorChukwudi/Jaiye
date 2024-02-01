@@ -37,7 +37,7 @@ const addTicketDetails=async(req,res)=>{
             res.status(CREATED).json({
               status:"success",
               msg:`Ticket details for event with ID: ${eventID} has been created.`,
-              data: await Ticket.findOne({eventID})
+              data: eventTicketDetails
             })
           }
         }
