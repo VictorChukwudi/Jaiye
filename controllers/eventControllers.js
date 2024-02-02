@@ -1,10 +1,11 @@
-import fetch from 'node-fetch';
+import axios from "axios";
 import { protocol } from "../server.js";
 import Event from "../models/events/eventModel.js";
 import { validationResult } from "express-validator";
 import { fileDelete, fileUpload } from "../config/cloudinary.js";
 import { adminControl } from "../utils/access/adminAccess.js";
 import { BADREQUEST, CREATED, NOTFOUND, OK, UNAUTHORIZED } from "../utils/statusCodes.js";
+import Ticket from '../models/events/ticketModel.js';
 
 const createEvent = async (req, res) => {
   try {
@@ -96,14 +97,18 @@ const getSingleEvent= async(req,res)=>{
   try{
     const id=req.params.id;
     const event= await Event.findById(id);
-    if(!event){
+    const ticket= await Ticket.findOne({eventID:id})
+    if(!event || !ticket){
       res.status(NOTFOUND)
-      throw new Error(`Event with id: ${id} not found`);
+      throw new Error(`Event and ticket details with eventID: ${id} not found`);
     }else{
       res.status(OK).json({
         status:"success",
         msg:`Event with id: ${id} found`,
-        data:event
+        data:{
+          event,
+          ticketDetails:ticket
+        }
       })
     }
   }catch(error){
@@ -121,6 +126,7 @@ const deleteEvent = async(req,res)=>{
     // const link = `${protocol}://${req.get("host")}/${route}`
     const route=`api/tickets/${id}`
     const url= `${protocol}://${req.get("host")}/${route}`
+    console.log(url)
     const event= await Event.findById(id);
     if(!event){
       res.status(NOTFOUND)
@@ -134,10 +140,12 @@ const deleteEvent = async(req,res)=>{
         fileDelete(element.img_id)
       });
       
+      // delete event from database
       await Event.findByIdAndDelete(id)
-      const response = await fetch(url);
-      const data = await response.json();
-      console.log(data);
+      //delete ticket details of event from database
+      const response = await axios.delete(url);
+      console.log(response.status);
+
       res.status(OK).json({
         status:"success",
         msg:`Event with id: ${id} deleted successfully`

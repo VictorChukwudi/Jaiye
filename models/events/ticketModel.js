@@ -6,7 +6,8 @@ const ticketSchema = new schema(
     eventID:{
       type:schema.Types.ObjectId,
       required:true,
-      ref:"Event"
+      ref:"Event",
+      unique:true
     },
     eventStatus:{
       type:String,

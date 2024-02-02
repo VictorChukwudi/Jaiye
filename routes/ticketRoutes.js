@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/", protect, addTicketDetails)
 router.patch("/:id", protect, editTicketDetails)
-router.delete("/:id", protect, deleteTicketDetails)
+router.delete("/:id", deleteTicketDetails)
 
 export default router;

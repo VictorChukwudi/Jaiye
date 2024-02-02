@@ -18,12 +18,12 @@ const addTicketDetails=async(req,res)=>{
         }else{
       
           const ticket = await Ticket.findOne({eventID})
-        console.log(ticket)
+        
           if(ticket){
             res.status(BADREQUEST)
             throw new Error(`Ticket details for event with ID: ${eventID} has already been created and can only be edited or deleted.`)
           }else{
-            const eventTicketDetails= new Ticket({
+            const eventTicketDetails= await new Ticket({
               eventID,    //ObjectID
               eventStatus,    //String - free or paid
               eventName,  //String - could be same as event title
@@ -51,12 +51,13 @@ const addTicketDetails=async(req,res)=>{
 
   const editTicketDetails= async(req,res)=>{
     try {
-        const eventID = req.params.ID;
+        const eventID = req.params.id;
         const {eventStatus, eventName,
             ticketQuantity, ticketsInfo, 
             minDailySales, maxDailySales, salesChannel} = req.body
             
-        const TicketDetails= await Ticket.findById(eventID);
+        const TicketDetails= await Ticket.findOne({eventID});
+        console.log(TicketDetails);
         if(!TicketDetails){
             res.status(NOTFOUND)
             throw new Error(`Ticket details for event with ID: ${eventID} not found.`);
@@ -70,7 +71,8 @@ const addTicketDetails=async(req,res)=>{
                 maxDailySales: maxDailySales || TicketDetails.maxDailySales,
                 salesChannel: salesChannel || TicketDetails.salesChannel
             }
-            const updateTicketDetails= await Ticket.findByIdAndUpdate(eventID,{$set: updatedDetails}, {$new: true})
+            // const updateTicketDetails= await Ticket.findOneAndUpdate({eventID},{$set: updatedDetails}, {$new: true})
+            const updateTicketDetails= await Ticket.findOneAndUpdate({eventID},updatedDetails, {new: true})
             res.status(OK).json({
                 status:"success",
                 msg:`Ticket details for event with ID: ${eventID} updated successfully.`,
@@ -95,10 +97,7 @@ const addTicketDetails=async(req,res)=>{
         throw new Error(`Ticket details for event with id: ${eventID} not found.`)
       }else{
         await Ticket.findOneAndDelete({eventID})
-        res.status(NOCONTENT).json({
-          status:"success",
-          msg:`Event with id: ${eventID} ticket details, deleted successfully.` 
-        })
+        res.status(NOCONTENT)
       }
 
     } catch (error) {
