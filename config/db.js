@@ -4,7 +4,7 @@ import color from "colors";
 dotenv.config();
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.dbURI_LOCAL, {
+    const conn = await mongoose.connect(process.env.dbURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
