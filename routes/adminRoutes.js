@@ -1,11 +1,12 @@
 import express from "express";
-import { deleteUserByEmail, deleteUserById, getAllUsers } from "../controllers/adminControllers.js";
+import { deleteUserByEmail, deleteUserById, getAllUsers, makeAdmin } from "../controllers/adminControllers.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { adminMiddie } from "../middlewares/adminAccessMiddleware.js";
 const router = express.Router();
 
-router.get("/all-users",  getAllUsers);
-router.delete("/delete", deleteUserByEmail);
-router.delete("/delete/:id", deleteUserById);
+router.post("/make-admin", makeAdmin)
+router.get("/users",  getAllUsers);
+router.delete("/users/delete", deleteUserByEmail);
+router.delete("/users/delete/:id", deleteUserById);
 
 export default router;

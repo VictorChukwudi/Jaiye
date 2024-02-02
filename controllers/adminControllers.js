@@ -1,5 +1,5 @@
 import User from "../models/user/userModel.js";
-import { NOTFOUND, OK, SERVERERROR } from "../utils/statusCodes.js";
+import { BADREQUEST, NOTFOUND, OK, SERVERERROR } from "../utils/statusCodes.js";
 
 
 const getAllUsers = async (req, res) => {
@@ -62,4 +62,33 @@ const deleteUserByEmail = async(req,res)=>{
     })
   }
 }
-export { getAllUsers, deleteUserById, deleteUserByEmail };
+
+const makeAdmin= async(req,res)=>{
+  try {
+    const {email}=req.body
+    if(!email){
+      res.status(BADREQUEST)
+      throw new Error("Email field cannot be empty")
+    }
+    const user= await User.findOne({email})
+    if(!user){
+      res.status(BADREQUEST)
+      throw new Error(`User with email: ${email} does not exist.`)
+    }else{
+      const admin= await User.findOneAndUpdate({email},{isAdmin:true},{new:true}).select(["-password"]);
+      res.status(OK).json({
+        status:"success",
+        msg:`User with email: ${email} and id: ${user._id} is now an admin.`,
+        data:admin
+      })
+    }
+  } catch (error) {
+    res.json({
+      status:"error",
+      msg:error.message
+    })
+  }
+}
+
+
+export { getAllUsers, deleteUserById, deleteUserByEmail, makeAdmin };

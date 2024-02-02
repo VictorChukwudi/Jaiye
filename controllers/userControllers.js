@@ -14,7 +14,7 @@ import { passwordEmail } from "../utils/emails/passwordEmail.js";
 //Signup Controller
 const signup = async (req, res) => {
   try {
-    const { firstname, lastname, phone_no, email, password, confirmpassword } =
+    const { firstname, lastname, phone_no, email, password, confirmpassword, isAdmin } =
       req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,6 +35,7 @@ const signup = async (req, res) => {
         phone_no,
         email,
         password,
+        isAdmin
       });
 
       bcrypt.genSalt(10, function (err, salt) {
