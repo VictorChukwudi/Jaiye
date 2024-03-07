@@ -167,7 +167,7 @@ const resendSignupMail = async (req, res) => {
           //hashing secret and storing it synchronously for email verification
           const secretSalt = bcrypt.genSaltSync(10);
           const secretHash = bcrypt.hashSync(secret, secretSalt);
-
+          
           await new Verification({
             userID: user._id,
             secret: secretHash,

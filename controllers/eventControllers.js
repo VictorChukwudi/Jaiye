@@ -97,7 +97,7 @@ const getSingleEvent= async(req,res)=>{
   try{
     const id=req.params.id;
     const event= await Event.findById(id);
-    const ticket= await Ticket.findOne({eventID:id})
+    const ticket= await Ticket.findOne({eventID:id}).select(["-_id"])
     if(!event || !ticket){
       res.status(NOTFOUND)
       throw new Error(`Event and ticket details with eventID: ${id} not found`);
