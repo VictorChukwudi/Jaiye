@@ -121,7 +121,8 @@ const verifySignupMail = async (req, res) => {
                },
                { new: true }
              ).select(["-password", "-__v"]);
-             await Verification.findOneAndDelete({ userID });
+            //  await Verification.findOneAndDelete({ userID });
+            await Verification.deleteMany({userID})
              res.status(200).json({
                status: "success",
                msg: "email successfully verified",
