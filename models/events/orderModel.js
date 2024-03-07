@@ -15,19 +15,8 @@ const orderSchema = new schema(
       default:"free",
       lowercase: true
     },
-    eventName:{
-      type:String,
-      required:true,
-      trim:true
-    },
-    ticketQuantity:{
-      type:Number,
-      required:true
-    },
-    ticketsInfo:[Object],
-    minDailySales:Number,
-    maxDailySales:Number,
-    salesChannel:[String]
+    orderDetails:[Object],
+    total: Object
 
   },
   {

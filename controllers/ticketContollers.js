@@ -1,6 +1,6 @@
+import mongoose from "mongoose"
 import Ticket from "../models/events/ticketModel.js";
 import Event from "../models/events/eventModel.js";
-import mongoose from "mongoose"
 import { CREATED, NOTFOUND, OK, BADREQUEST, NOCONTENT } from "../utils/statusCodes.js";
 import { adminControl } from "../utils/access/adminAccess.js";
 

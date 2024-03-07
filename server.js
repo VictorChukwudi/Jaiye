@@ -41,3 +41,7 @@ app.use("/api/admin", protect, adminMiddie, adminRoutes);
 app.listen(port, () => {
   console.log(`Server running at port ${port}`.underline.italic);
 });
+
+
+//65e97c5e5c64e4db0acc57b2 - eventID with just one ticket type
+//65e979bb778d40a0c14ee224 - eventID with three ticket types
