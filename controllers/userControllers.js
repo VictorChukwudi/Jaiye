@@ -195,25 +195,30 @@ const login = async (req, res) => {
       const { email, password } = req.body;
       const user = await User.findOne({ email });
 
-      if (user && user.password) {
-        if (await bcrypt.compare(password, user.password)) {
-          res.json({
-            _id: user._id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            phone_no: user.phone_no,
-            email: user.email,
-            isAdmin: user.isAdmin,
-            emailVerified: user.emailVerified,
-            token: generateToken(user._id, user.isAdmin),
-          });
+      if(!user.emailVerified){
+        res.status(400)
+        throw new Error("Verify email to login.")
+      }else{
+        if (user && user.password) {
+          if (await bcrypt.compare(password, user.password)) {
+            res.json({
+              _id: user._id,
+              firstname: user.firstname,
+              lastname: user.lastname,
+              phone_no: user.phone_no,
+              email: user.email,
+              isAdmin: user.isAdmin,
+              emailVerified: user.emailVerified,
+              token: generateToken(user._id, user.isAdmin),
+            });
+          } else {
+            res.status(401);
+            throw new Error("Invalid email or password.");
+          }
         } else {
           res.status(401);
-          throw new Error("Invalid email or password.");
+          throw new Error("Signup or Login with socials");
         }
-      } else {
-        res.status(401);
-        throw new Error("Signup or Login with socials");
       }
     }
   } catch (error) {

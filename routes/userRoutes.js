@@ -10,13 +10,13 @@ import {
   updateUserProfile,
   setAsAdmin,
 } from "../controllers/userControllers.js";
-import { isVerified, protect } from "../middlewares/authMiddleware.js";
+import { protect } from "../middlewares/authMiddleware.js";
 import validator from "../middlewares/validators.js";
 
 const router = express.Router();
 
 router.post("/signup", validator.signup, signup);
-router.post("/login", validator.login, isVerified, login);
+router.post("/login", validator.login, login);
 router.get("/:userID/:secret", verifySignupMail);
 router.post("/resend-mail", resendSignupMail);
 router.post("/forgot-password", forgotPassword);
