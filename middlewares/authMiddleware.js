@@ -30,6 +30,22 @@ const protect = async (req, res, next) => {
   }
 };
 
+const isVerified= async(req,res, next)=>{
+  try {
+    const email= req.body.email
+    const user= await User.findOne({email})
+    if(!user.emailVerified){
+      res.status(400)
+      throw new Error("Verify your email to login")
+    }else{
+      next
+    }
+  } catch (error) {
+    res.json({
+      status:"error",
+      msg:error.message
+    })
+  }
+}
 
-
-export { protect};
+export { protect, isVerified};

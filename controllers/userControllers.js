@@ -127,6 +127,7 @@ const verifySignupMail = async (req, res) => {
                msg: "email successfully verified",
                data: updateUser,
              });
+            // res.status(200).redirect()
            }
          }
         }
