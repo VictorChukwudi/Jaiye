@@ -25,5 +25,8 @@ router.post("/reset-password/:userID/:secret", resetPassword);
 router.get("/profile", protect, getUserProfile);
 router.post("/update-profile", protect, updateUserProfile);
 
+router.get("/redirect", (req,res)=>{
+  // res.redirect("gooo")
+})
 router.get("/set-admin", protect, setAsAdmin);
 export default router;

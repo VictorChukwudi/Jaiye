@@ -81,6 +81,34 @@ const validator = {
       .bail()
       .isArray({ min: 2, max: 5 }),
   ],
+
+  checkout:[
+    check("user","User object is required")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isObject(),
+    check("user.firstname", "User's firstname is required.")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("user.lastname", "User's lastname is required.")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("user.email", "User's email is required.")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+    check("user.phone", "User's phone is required.")
+      .exists()
+      .bail()
+      .notEmpty()
+      .isString(),
+  ]
 };
 
 export default validator;

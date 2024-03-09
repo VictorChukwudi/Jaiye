@@ -9,12 +9,7 @@ const orderSchema = new schema(
       ref:"Event",
       unique:true
     },
-    eventStatus:{
-      type:String,
-      enum:["paid","free"],
-      default:"free",
-      lowercase: true
-    },
+    user: Object,
     orderDetails:[Object],
     total: Object
 

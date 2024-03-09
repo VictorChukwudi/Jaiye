@@ -1,5 +1,5 @@
 //https://tickeneft.onrender.com
-import express from "express";
+import express, { application } from "express";
 import dotenv from "dotenv";
 import logger from "morgan";
 import cors from "cors";
@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import ticketRoutes from "./routes/ticketRoutes.js";
+import checkoutRoutes from "./routes/checkoutRoutes.js"
 import { protect } from "./middlewares/authMiddleware.js";
 import { adminMiddie } from "./middlewares/adminAccessMiddleware.js";
 
@@ -36,6 +37,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/user", userRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/checkout", checkoutRoutes)
 app.use("/api/admin", protect, adminMiddie, adminRoutes);
 
 app.listen(port, () => {

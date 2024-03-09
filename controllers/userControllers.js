@@ -93,7 +93,7 @@ const verifySignupMail = async (req, res) => {
         });
       } else {
         const details = await Verification.findOne({ userID: userID }).sort({"createdAt":-1});
-        console.log(details);
+        // console.log(details);
         //check if a verification detail was found
         if(!details){
           res.status(400)
@@ -123,12 +123,13 @@ const verifySignupMail = async (req, res) => {
              ).select(["-password", "-__v"]);
             //  await Verification.findOneAndDelete({ userID });
             await Verification.deleteMany({userID})
-             res.status(200).json({
-               status: "success",
-               msg: "email successfully verified",
-               data: updateUser,
-             });
-            // res.status(200).redirect()
+            res.status(301).redirect("https://jaiye.netlify.app/login")
+            //  res.status(200).json({
+            //    status: "success",
+            //    msg: "email successfully verified",
+            //    data: updateUser,
+            //  });
+            
            }
          }
         }
